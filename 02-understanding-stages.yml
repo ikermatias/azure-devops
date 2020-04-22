@@ -16,29 +16,20 @@ stages:
     steps:
     - bash: echo build first job
     - bash: echo $(PipelineLevelVariable)
-  - job: SecondJob
-    steps:
-    - bash: echo build SecondJob
+    - bash: echo $(Build.ArtifactStagingDirectory)
+    - bash: echo $(System.DefaultWorkingDirectory)
+    - bash: java -version
+    - bash: node --version
+    - bash: python --version
+    - bash: mvn -version
+    - bash: ls -R $(Build.ArtifactStagingDirectory)
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        Contents: |
+          **/*.yaml
+          **/*.tf
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    - bash: ls -R $(Build.ArtifactStagingDirectory)
 
-- stage: DevDeploy
-  variables:
-    enviroment: Dev
-  dependsOn: build
-  jobs:
-  - job: DevFirstJob
-    steps:
-    - bash: echo build $(enviroment)first job
-- stage: QADeploy
-  dependsOn: build
-  jobs:
-  - job: QAFirstJob
-    steps:
-    - bash: echo build QAfirst job
-- stage: PrdDeploy
-  dependsOn:
-  - DevDeploy
-  - QADeploy
-  jobs:
-  - job: PRDFirstJob
-    steps:
-    - bash: echo build PRDfirst job
+
