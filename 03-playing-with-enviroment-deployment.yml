@@ -4,9 +4,9 @@ trigger:
 strategy:
   matrix:
     linux:
-      operatinSystem: ubuntu-latest
+      operatingSystem: ubuntu-latest
     mac:
-      operatinSystem: macos-latest
+      operatingSystem: macos-latest
 
 pool:
   vmImage: $(operatingSystem)
